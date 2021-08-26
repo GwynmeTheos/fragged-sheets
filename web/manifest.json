@@ -1,6 +1,6 @@
 {
-    "name": "fragged_sheets",
-    "short_name": "fragged_sheets",
+    "name": "Fragged Sheets",
+    "short_name": "Fragged Sheets",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
