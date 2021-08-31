@@ -17,7 +17,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  intl: any # FIXME Bad, explicitly nominate latest resolvable version.
+  intl: ^0.17.0
+  # filesystem_picker: ^2.0.0-nullsafety.0
+  clipboard: ^0.1.3
 
 
 dev_dependencies:
@@ -27,6 +29,20 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+  assets:
+    - assets/fragged_aeternum_black.png
+    - assets/fragged_empire_black.png
+    - assets/fragged_kingdom_black.png
+    - assets/fragged_seas_black.png
+  
+  fonts:
+    - family:  Fragged
+      fonts:
+        - asset: assets/Fragged.ttf
+    - family:  Patreon
+      fonts:
+        - asset: assets/Patreon.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

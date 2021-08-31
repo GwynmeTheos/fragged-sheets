@@ -15,8 +15,8 @@ class FraggedSheets extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fragged Sheets',
-      theme: ThemeData.dark(),
-      home: MyHomePage(title: 'Fragged Sheets'),
+      theme: ThemeData.light(),
+      home: Home(),
       supportedLocales: [
         const Locale('en', ''), // English, no country code
         const Locale('pt', ''), // Portuguese, no country code

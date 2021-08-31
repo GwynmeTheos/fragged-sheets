@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "Fragged Sheets")
+set(BINARY_NAME "fragged_sheets")
 set(APPLICATION_ID "com.example.fragged_sheets")
 
 cmake_policy(SET CMP0063 NEW)
