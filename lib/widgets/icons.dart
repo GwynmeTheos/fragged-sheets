@@ -32,3 +32,12 @@ class Patreon {
 
   static const IconData patreon_logo = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
+
+class Github {
+  Github._();
+
+  static const _kFontFam = 'Github';
+  static const String? _kFontPkg = null;
+
+  static const IconData github = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+}

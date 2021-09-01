@@ -67,7 +67,22 @@ extension EditionsExt on Editions {
     }
   }
 
-  String get logo {
+  String get logoDark {
+    switch (this) {
+      case Editions.EMPIRE:
+        return "assets/fragged_empire_white.png";
+      case Editions.AETERNUM:
+        return "assets/fragged_aeternum_white.png";
+      case Editions.KINGDOM:
+        return "assets/fragged_kingdom_white.png";
+      case Editions.SEAS:
+        return "assets/fragged_seas_white.png";
+      default:
+        return "assets/fragged_sheets_white.png";
+    }
+  }
+  
+  String get logoLight {
     switch (this) {
       case Editions.EMPIRE:
         return "assets/fragged_empire_black.png";
@@ -78,7 +93,7 @@ extension EditionsExt on Editions {
       case Editions.SEAS:
         return "assets/fragged_seas_black.png";
       default:
-        return "assets/fragged_empire_black.png";
+        return "assets/fragged_sheets_black.png";
     }
   }
 }

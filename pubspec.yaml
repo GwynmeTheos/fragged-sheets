@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.17.0
   # filesystem_picker: ^2.0.0-nullsafety.0
   clipboard: ^0.1.3
+  url_launcher: ^6.0.9
 
 
 dev_dependencies:
@@ -35,6 +36,12 @@ flutter:
     - assets/fragged_empire_black.png
     - assets/fragged_kingdom_black.png
     - assets/fragged_seas_black.png
+    - assets/fragged_sheets_black.png
+    - assets/fragged_aeternum_white.png
+    - assets/fragged_empire_white.png
+    - assets/fragged_kingdom_white.png
+    - assets/fragged_seas_white.png
+    - assets/fragged_sheets_white.png
   
   fonts:
     - family:  Fragged
@@ -43,6 +50,9 @@ flutter:
     - family:  Patreon
       fonts:
         - asset: assets/Patreon.ttf
+    - family:  Github
+      fonts:
+        - asset: assets/Github.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

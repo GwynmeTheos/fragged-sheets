@@ -4,4 +4,3 @@
 
 export 'icons.dart';
 export 'theme.dart';
-export 'alerts.dart';
