@@ -143,7 +143,7 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Text("YT"),
+                  child: Text("Nothing to see here yet"),
                 ),
                 Divider(
                   height: 1,
@@ -250,7 +250,7 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Text("YT"),
+                  child: Text("Nothing to see here yet"),
                 ),
                 Divider(
                   height: 1,
@@ -314,6 +314,113 @@ class _SidebarState extends State<Sidebar> {
     );
   }
   
+  Future<SheetModel?> showNewGoonAlert(BuildContext context) async {
+    return await showDialog<SheetModel?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+              bottomLeft: Radius.circular(16.0),
+              bottomRight: Radius.circular(16.0),
+            )
+          ),
+          contentPadding: EdgeInsets.all(0.0),
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16)
+                    ),
+                    color: Colors.black
+                  ),
+                  child: Text(
+                    "Create new goon",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Text("Nothing to see here yet"),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.black
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32.0),
+                            ),
+                          ),
+                          child: Text(
+                            "Create",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          return ;
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(16.0)
+                            ),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () => Navigator.of(context).pop(null)
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
   Future<SheetModel?> showImportSheetAlert(BuildContext context) async {
     return await showDialog<SheetModel?>(
       context: context,
@@ -438,7 +545,7 @@ class _SidebarState extends State<Sidebar> {
       )
     );
 
-    // Character
+    // Home
     content.add(
       Material(
         borderRadius: BorderRadius.circular(10),
@@ -512,6 +619,30 @@ class _SidebarState extends State<Sidebar> {
       )
     );
 
+    // Character
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Icons.sentiment_very_dissatisfied,
+            color: Colors.black,
+          ),
+          title: Text("New goon"),
+          onTap: () async {
+            SheetModel? newSheet = await showNewGoonAlert(context);
+            if (newSheet != null) {this.sheets.add(newSheet);}
+          },
+        ),
+      )
+    );
+    content.add(
+      Divider(
+        height: 5,
+        color: Colors.grey.shade200,
+      )
+    );
+
     // Import
     content.add(
       Material(
@@ -566,6 +697,10 @@ class _SidebarState extends State<Sidebar> {
             ? Colors.grey.shade300
             : Colors.grey.shade50,
           child: ListTile(
+            leading: Icon(
+              this.sheets[i].type.icon,
+              color: Colors.black,
+            ),
             title: Text(this.sheets[i].name),
             onTap: (){
               setState(() {
@@ -590,7 +725,7 @@ class _SidebarState extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
+    // MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return Material(
       elevation: 20,
@@ -730,7 +865,19 @@ class _SheetCanvasState extends State<SheetCanvas>{
                                 ),
                                 Divider(height: 1,),
                                 ListTile(
-                                  title: Text("GM Goon Sheets(?)"),
+                                  title: Text("GM Goon Sheets"),
+                                ),
+                                Divider(height: 1,),
+                                ListTile(
+                                  title: Text("Make sheet groups"),
+                                ),
+                                Divider(height: 1,),
+                                ListTile(
+                                  title: Text("Make sheets and groups draggable"),
+                                ),
+                                Divider(height: 1,),
+                                ListTile(
+                                  title: Text("Polish looks"),
                                 ),
                                 Divider(height: 1,),
                               ]

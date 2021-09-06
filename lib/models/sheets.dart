@@ -98,12 +98,42 @@ extension EditionsExt on Editions {
   }
 }
 
+enum SheetType {
+  CHARACTER,
+  VEHICLE,
+  GOONS, // In-dev
+}
+extension SheetTypesEx on SheetType{
+  String get name {
+    switch (this) {
+      case SheetType.CHARACTER:
+        return "Character";
+      case SheetType.VEHICLE:
+        return "Vehicle";
+      case SheetType.GOONS:
+        return "Goons";
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case SheetType.CHARACTER:
+        return Icons.person;
+      case SheetType.VEHICLE:
+        return Icons.two_wheeler;
+      case SheetType.GOONS:
+        return Icons.sentiment_very_dissatisfied;
+    }
+  }
+}
+
 /// Abstract model for integration with the home page.
 /// New sheets must inherit from this class and implement [toJsonString] and
 /// [toMap] as overrides.
 abstract class SheetModel {
   abstract Editions edition;
   abstract String name;
+  abstract SheetType type;
 
   /// Returns a Json string representation of the object.
   String get toJsonString;
@@ -113,6 +143,7 @@ abstract class SheetModel {
 
 class EmpireSheetModel extends SheetModel {
   Editions edition = Editions.EMPIRE;
+  SheetType type = SheetType.CHARACTER;
 
   // Basic data
   String name;
@@ -134,6 +165,7 @@ class EmpireSheetModel extends SheetModel {
 
 class AeternumSheetModel extends SheetModel {
   Editions edition = Editions.AETERNUM;
+  SheetType type = SheetType.CHARACTER;
 
   // Basic data
   String name;
