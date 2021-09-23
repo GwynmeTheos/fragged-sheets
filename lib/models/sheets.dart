@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fragged_sheets/widgets/widgets.dart';
 
 /// Enumerates the editions for using on the new sheet
 /// selection screen.
@@ -122,7 +123,7 @@ extension SheetTypesEx on SheetType{
       case SheetType.VEHICLE:
         return Icons.two_wheeler;
       case SheetType.GOONS:
-        return Icons.sentiment_very_dissatisfied;
+        return SheetIcons.enemy;
     }
   }
 }

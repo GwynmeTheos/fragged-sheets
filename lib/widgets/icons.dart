@@ -15,29 +15,24 @@
 ///
 import 'package:flutter/widgets.dart';
 
-class Fragged {
-  Fragged._();
+class Logos {
+  Logos._();
 
-  static const _kFontFam = 'Fragged';
+  static const _kFontFam = 'Logos';
   static const String? _kFontPkg = null;
 
-  static const IconData fragged = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData patreon = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData github = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData fragged = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData discord = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
 
-class Patreon {
-  Patreon._();
 
-  static const _kFontFam = 'Patreon';
+class SheetIcons {
+  SheetIcons._();
+
+  static const _kFontFam = 'SheetIcons';
   static const String? _kFontPkg = null;
 
-  static const IconData patreon_logo = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-}
-
-class Github {
-  Github._();
-
-  static const _kFontFam = 'Github';
-  static const String? _kFontPkg = null;
-
-  static const IconData github = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData enemy = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

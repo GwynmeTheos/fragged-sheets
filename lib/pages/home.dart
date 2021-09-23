@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fragged_sheets/pages/sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fragged_sheets/widgets/widgets.dart';
 import 'package:fragged_sheets/models/models.dart';
@@ -625,7 +626,7 @@ class _SidebarState extends State<Sidebar> {
         borderRadius: BorderRadius.circular(10),
         child: ListTile(
           leading: Icon(
-            Icons.sentiment_very_dissatisfied,
+            SheetIcons.enemy,
             color: Colors.black,
           ),
           title: Text("New goon"),
@@ -667,18 +668,64 @@ class _SidebarState extends State<Sidebar> {
       )
     );
 
-    // Import
+    // Github
     content.add(
       Material(
         borderRadius: BorderRadius.circular(10),
         child: ListTile(
           leading: Icon(
-            Github.github,
+            Logos.github,
             color: Colors.black,
           ),
           title: Text("Github repo"),
           onTap: () async {
             await launch("https://github.com/GwynmeTheos/fragged-sheets");
+          },
+        ),
+      )
+    );
+    content.add(
+      Divider(
+        height: 5,
+        color: Colors.grey.shade200,
+      )
+    );
+
+    // Discord
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Logos.discord,
+            color: Colors.black,
+          ),
+          title: Text("Discord"),
+          onTap: () async {
+            await launch("https://discord.com/invite/Z6Erwyc");
+          },
+        ),
+      )
+    );
+    content.add(
+      Divider(
+        height: 5,
+        color: Colors.grey.shade200,
+      )
+    );
+
+    // Website
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Logos.fragged,
+            color: Colors.black,
+          ),
+          title: Text("Website"),
+          onTap: () async {
+            await launch("http://fraggedempire.com/");
           },
         ),
       )
@@ -763,6 +810,28 @@ class SheetCanvas extends StatefulWidget {
   _SheetCanvasState createState() => _SheetCanvasState();
 }
 class _SheetCanvasState extends State<SheetCanvas>{
+  Widget get tabBarView {
+    switch (widget.sheet!.edition) {
+      case Editions.EMPIRE:
+        EmpireSheetPage sheetPage = new EmpireSheetPage(widget.sheet ?? EmpireSheetModel());
+        return sheetPage.tabBarView;
+      case (Editions.AETERNUM):
+        AeternumSheetPage sheetPage = new AeternumSheetPage(widget.sheet ?? AeternumSheetModel());
+        return sheetPage.tabBarView;
+      // case :
+        
+      // case :
+        
+      // case :
+        
+      default:
+        return Align(
+          alignment: Alignment.center,
+          child: Text("Woops! Something went wrong."),
+        );
+    }
+  }
+
   @override
   void initState(){
     super.initState();
@@ -934,35 +1003,57 @@ class _SheetCanvasState extends State<SheetCanvas>{
               ),
             ),
             actions: [
-              SizedBox(
-                
+              Container(
+                padding: EdgeInsets.only(
+                  right: mediaQueryData.size.width * 0.02
+                ),
+                child: IconButton(
+                  onPressed: (){
+                    print("Boop");
+                  },
+                  icon: Icon(
+                    Icons.download,
+                    color: Colors.white
+                  )
+                ),
               ),
-              IconButton(
-                onPressed: (){},
-                icon: Icon(
-                  Icons.download,
-                  color: Colors.white
-                )
+              Container(
+                padding: EdgeInsets.only(
+                  right: mediaQueryData.size.width * 0.02
+                ),
+                child: IconButton(
+                  onPressed: (){
+                    print("Boop");
+                  },
+                  icon: Icon(
+                    Icons.download,
+                    color: Colors.white
+                  )
+                ),
               ),
             ],
             bottom: TabBar(
               tabs: [
                 Tab(text: "Attributes",),
                 Tab(text: "Skills",),
+                Tab(text: "Traits",),
                 Tab(text: "Equipment",),
-                Tab(text: "Placeholder",),
-                Tab(text: "Placeholder",),
+                Tab(text: "Actions",),
               ],
             ),
           ),
           body: SizedBox.expand(
             child: Container(
+              padding: EdgeInsets.all(
+                mediaQueryData.size.width * 0.02
+              ),
               decoration: BoxDecoration(
                 color: Colors.white
               ),
+              child: this.tabBarView,
             ),
           ),
-        )
+        ),
       );
     }
 
