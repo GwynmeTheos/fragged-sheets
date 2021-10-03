@@ -3,6 +3,7 @@ import 'package:fragged_sheets/pages/sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fragged_sheets/widgets/widgets.dart';
 import 'package:fragged_sheets/models/models.dart';
+import 'package:fragged_sheets/utils/utils.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -81,6 +82,10 @@ class _SidebarState extends State<Sidebar> {
   late List<SheetModel> sheets;
   late int activeSheetIndex;
 
+  Editions? newCharacterEdition = EditionsExt.characterSheetList[0];
+  Editions? newExtraEdition = EditionsExt.extraSheetList[0];
+  TextEditingController newSheetName = TextEditingController();
+
   @override
   void initState(){
     super.initState();
@@ -88,11 +93,12 @@ class _SidebarState extends State<Sidebar> {
     this.activeSheetIndex = widget.activeSheetIndex;
 
     this.sheets = List<SheetModel>.empty(growable: true);
-    this.sheets.add(EmpireSheetModel(
-      name: "Hello")
+
+    this.sheets.add(
+      EmpireSheetModel(name: "Hello", type: SheetType.CHARACTER)
     );
-    this.sheets.add(AeternumSheetModel(
-      name: "World")
+    this.sheets.add(
+      AeternumSheetModel(name: "World", type: SheetType.CHARACTER)
     );
   }
 
@@ -102,7 +108,7 @@ class _SidebarState extends State<Sidebar> {
   }
 
   Future<SheetModel?> showNewCharacterAlert(BuildContext context) async {
-    return await showDialog<SheetModel?>(
+    return showDialog<SheetModel?>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -115,101 +121,150 @@ class _SidebarState extends State<Sidebar> {
             )
           ),
           contentPadding: EdgeInsets.all(0.0),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)
-                    ),
-                    color: Colors.black
-                  ),
-                  child: Text(
-                    "Create new character",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Text("Nothing to see here yet"),
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.black
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(32.0),
-                            ),
-                          ),
-                          child: Text(
-                            "Create",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16)
                         ),
-                        onTap: () {
-                          return ;
-                        },
+                        color: Colors.black
+                      ),
+                      child: Text(
+                        "Create new character",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(16.0)
-                            ),
-                          ),
-                          child: Text(
-                            "Cancel",
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DropdownButton<Editions>(
+                            value: this.newCharacterEdition ?? EditionsExt.characterSheetList[0],
+                            items: editionListToDropdown(EditionsExt.characterSheetList),
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800
+                              color: Colors.black
                             ),
-                            textAlign: TextAlign.center,
+                            underline: Container(
+                              color: Colors.black
+                            ),
+                            onChanged: (Editions? newValue) {
+                              if (newValue != null){
+                                setState(() {
+                                  this.newCharacterEdition = newValue;
+                                });
+                              }
+                            },
+                          ),
+                          TextField(
+                            onChanged: (value) {},
+                            controller: this.newSheetName,
+                            decoration: InputDecoration(
+                              hintText: "Name",        
+                              enabledBorder: UnderlineInputBorder(      
+                                borderSide: BorderSide(color: Colors.black),   
+                              ),  
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            )
+                          ),
+                        ],
+                      )
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.black
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(32.0),
+                                ),
+                              ),
+                              child: Text(
+                                "Create",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () {
+                              if (this.newCharacterEdition != null) {
+                                Navigator.of(context).pop(
+                                  SheetModel.builder(
+                                    edition: this.newCharacterEdition!,
+                                    type: SheetType.CHARACTER,
+                                    name: this.newSheetName.text == ""
+                                      ? "New character"
+                                      : this.newSheetName.text
+                                  )
+                                );
+                              }
+                            },
                           ),
                         ),
-                        onTap: () => Navigator.of(context).pop(null)
-                      ),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(16.0)
+                                ),
+                              ),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).pop(null)
+                          ),
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          ),
+                ),
+              );
+            },
+          )
         );
       }
     );
   }
   
-  Future<SheetModel?> showNewVehicleAlert(BuildContext context) async {
-    return await showDialog<SheetModel?>(
+  Future<SheetModel?> showNewExtraAlert(BuildContext context) async {
+    
+    return showDialog<SheetModel?>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -222,94 +277,142 @@ class _SidebarState extends State<Sidebar> {
             )
           ),
           contentPadding: EdgeInsets.all(0.0),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)
-                    ),
-                    color: Colors.black
-                  ),
-                  child: Text(
-                    "Create new vehicle",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Text("Nothing to see here yet"),
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.black
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(32.0),
-                            ),
-                          ),
-                          child: Text(
-                            "Create",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16)
                         ),
-                        onTap: () {
-                          return ;
-                        },
+                        color: Colors.black
+                      ),
+                      child: Text(
+                        "Create new extra",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(16.0)
-                            ),
-                          ),
-                          child: Text(
-                            "Cancel",
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DropdownButton<Editions>(
+                            value: this.newExtraEdition ?? EditionsExt.extraSheetList[0],
+                            items: editionListToDropdown(EditionsExt.extraSheetList),
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800
+                              color: Colors.black
                             ),
-                            textAlign: TextAlign.center,
+                            underline: Container(
+                              color: Colors.black
+                            ),
+                            onChanged: (Editions? newValue) {
+                              if (newValue != null){
+                                setState(() {
+                                  this.newExtraEdition = newValue;
+                                });
+                              }
+                            },
+                          ),
+                          TextField(
+                            onChanged: (value) {},
+                            controller: this.newSheetName,
+                            decoration: InputDecoration(
+                              hintText: "Name",        
+                              enabledBorder: UnderlineInputBorder(      
+                                borderSide: BorderSide(color: Colors.black),   
+                              ),  
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            )
+                          ),
+                        ],
+                      )
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.black
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(32.0),
+                                ),
+                              ),
+                              child: Text(
+                                "Create",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () {
+                              if (this.newExtraEdition != null) {
+                                Navigator.of(context).pop(
+                                  SheetModel.builder(
+                                    edition: this.newExtraEdition!,
+                                    type: SheetType.EXTRA,
+                                    name: this.newSheetName.text == ""
+                                      ? "New character"
+                                      : this.newSheetName.text
+                                  )
+                                );
+                              }
+                            },
                           ),
                         ),
-                        onTap: () => Navigator.of(context).pop(null)
-                      ),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(16.0)
+                                ),
+                              ),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).pop(null)
+                          ),
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          ),
+                ),
+              );
+            },
+          )
         );
       }
     );
@@ -358,7 +461,7 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Text("Nothing to see here yet"),
+                  child: Text("Coming soon"),
                 ),
                 Divider(
                   height: 1,
@@ -465,7 +568,7 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Text("YT"),
+                  child: Text("Coming soon"),
                 ),
                 Divider(
                   height: 1,
@@ -540,11 +643,7 @@ class _SidebarState extends State<Sidebar> {
             : widget.activeSheet!.edition.logoLight
         ),
     );
-    content.add(
-      Divider(
-        color: Colors.black,
-      )
-    );
+    content.add(ConstWidgets.sectionDivider);
 
     // Home
     content.add(
@@ -565,12 +664,7 @@ class _SidebarState extends State<Sidebar> {
         ),
       )
     );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
+    content.add(ConstWidgets.itemDivider);
 
     // Character
     content.add(
@@ -584,19 +678,18 @@ class _SidebarState extends State<Sidebar> {
           title: Text("New character"),
           onTap: () async {
             SheetModel? newSheet = await showNewCharacterAlert(context);
-            if (newSheet != null) {this.sheets.add(newSheet);}
+            if (newSheet != null) {
+              setState(() {
+                this.sheets.add(newSheet);
+              });
+            }
           },
         ),
       )
     );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
+    content.add(ConstWidgets.itemDivider);
 
-    // Vehicle
+    // Extras
     content.add(
       Material(
         borderRadius: BorderRadius.circular(10),
@@ -605,22 +698,21 @@ class _SidebarState extends State<Sidebar> {
             Icons.two_wheeler,
             color: Colors.black,
           ),
-          title: Text("New vehicle"),
+          title: Text("New extra"),
           onTap: () async {
-            SheetModel? newSheet = await showNewVehicleAlert(context);
-            if (newSheet != null) {this.sheets.add(newSheet);}
+            SheetModel? newSheet = await showNewExtraAlert(context);
+            if (newSheet != null) {
+              setState(() {
+                this.sheets.add(newSheet);
+              });
+            }
           },
         ),
       )
     );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
+    content.add(ConstWidgets.itemDivider);
 
-    // Character
+    // Goons
     content.add(
       Material(
         borderRadius: BorderRadius.circular(10),
@@ -632,17 +724,16 @@ class _SidebarState extends State<Sidebar> {
           title: Text("New goon"),
           onTap: () async {
             SheetModel? newSheet = await showNewGoonAlert(context);
-            if (newSheet != null) {this.sheets.add(newSheet);}
+            if (newSheet != null) {
+              setState(() {
+                this.sheets.add(newSheet);
+              });
+            }
           },
         ),
       )
     );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
+    content.add(ConstWidgets.itemDivider);
 
     // Import
     content.add(
@@ -661,80 +752,7 @@ class _SidebarState extends State<Sidebar> {
         ),
       )
     );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
-
-    // Github
-    content.add(
-      Material(
-        borderRadius: BorderRadius.circular(10),
-        child: ListTile(
-          leading: Icon(
-            Logos.github,
-            color: Colors.black,
-          ),
-          title: Text("Github repo"),
-          onTap: () async {
-            await launch("https://github.com/GwynmeTheos/fragged-sheets");
-          },
-        ),
-      )
-    );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
-
-    // Discord
-    content.add(
-      Material(
-        borderRadius: BorderRadius.circular(10),
-        child: ListTile(
-          leading: Icon(
-            Logos.discord,
-            color: Colors.black,
-          ),
-          title: Text("Discord"),
-          onTap: () async {
-            await launch("https://discord.com/invite/Z6Erwyc");
-          },
-        ),
-      )
-    );
-    content.add(
-      Divider(
-        height: 5,
-        color: Colors.grey.shade200,
-      )
-    );
-
-    // Website
-    content.add(
-      Material(
-        borderRadius: BorderRadius.circular(10),
-        child: ListTile(
-          leading: Icon(
-            Logos.fragged,
-            color: Colors.black,
-          ),
-          title: Text("Website"),
-          onTap: () async {
-            await launch("http://fraggedempire.com/");
-          },
-        ),
-      )
-    );
-    content.add(
-      Divider(
-        color: Colors.black,
-      )
-    );
+    content.add(ConstWidgets.sectionDivider);
 
     for (int i = 0; i < this.sheets.length; i++){
       content.add(
@@ -766,6 +784,61 @@ class _SidebarState extends State<Sidebar> {
         ),
       );
     }
+    if (this.sheets.length > 0) {content.add(ConstWidgets.sectionDivider);}
+    
+
+    // Github
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Logos.github,
+            color: Colors.black,
+          ),
+          title: Text("Github repo"),
+          onTap: () async {
+            await launch("https://github.com/GwynmeTheos/fragged-sheets");
+          },
+        ),
+      )
+    );
+    content.add(ConstWidgets.itemDivider);
+
+    // Discord
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Logos.discord,
+            color: Colors.black,
+          ),
+          title: Text("Discord"),
+          onTap: () async {
+            await launch("https://discord.com/invite/Z6Erwyc");
+          },
+        ),
+      )
+    );
+    content.add(ConstWidgets.itemDivider);
+
+    // Website
+    content.add(
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            Logos.fragged,
+            color: Colors.black,
+          ),
+          title: Text("Website"),
+          onTap: () async {
+            await launch("http://fraggedempire.com/");
+          },
+        ),
+      )
+    );
 
     return content;
   }
@@ -811,12 +884,14 @@ class SheetCanvas extends StatefulWidget {
 }
 class _SheetCanvasState extends State<SheetCanvas>{
   Widget get tabBarView {
+    // This will only ever run if widget.sheet is not null, so there is no 
+    // risk regarding the null safety ignore operators here.
     switch (widget.sheet!.edition) {
       case Editions.EMPIRE:
-        EmpireSheetPage sheetPage = new EmpireSheetPage(widget.sheet ?? EmpireSheetModel());
+        EmpireSheetPage sheetPage = new EmpireSheetPage(widget.sheet!);
         return sheetPage.tabBarView;
       case (Editions.AETERNUM):
-        AeternumSheetPage sheetPage = new AeternumSheetPage(widget.sheet ?? AeternumSheetModel());
+        AeternumSheetPage sheetPage = new AeternumSheetPage(widget.sheet!);
         return sheetPage.tabBarView;
       // case :
         
@@ -827,7 +902,13 @@ class _SheetCanvasState extends State<SheetCanvas>{
       default:
         return Align(
           alignment: Alignment.center,
-          child: Text("Woops! Something went wrong."),
+          child: Text(
+            "Woops! Something went wrong.",
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold
+            ),
+          ),
         );
     }
   }
@@ -918,7 +999,7 @@ class _SheetCanvasState extends State<SheetCanvas>{
                                 ),
                                 Divider(height: 1,),
                                 ListTile(
-                                  title: Text("Vehicle sheets for all editions (that have them)"),
+                                  title: Text("Extra sheets for all editions (that have them)"),
                                 ),
                                 Divider(height: 1,),
                                 ListTile(

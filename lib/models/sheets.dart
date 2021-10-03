@@ -13,7 +13,7 @@ enum Editions {
   EMPIRE_SECOND, // In-dev
 }
 extension EditionsExt on Editions {
-  String get characterSheet {
+  String get name {
     switch (this) {
       case Editions.EMPIRE:
         return "Fragged Empire";
@@ -33,24 +33,30 @@ extension EditionsExt on Editions {
         return "N/A";
     }
   }
-
-  String get vehicleSheet {
-    switch (this) {
-      case Editions.EMPIRE:
-        return "Fragged Empire";
-      case Editions.SEAS:
-        return "Fragged Seas";
-      case Editions.EMPIRE_SECOND:
-        return "Fragged Empire 2e"; // In Dev
-      default:
-        return "N/A";
-    }
+  static List<Editions> get characterSheetList {
+    return [
+      Editions.EMPIRE,
+      Editions.AETERNUM,
+      Editions.KINGDOM,
+      Editions.SEAS,
+      Editions.DIESELPUNK,
+      Editions.CYBERPUNK,
+      Editions.EMPIRE_SECOND,
+    ];
   }
 
-  SheetModel get sheet {
+  static List<Editions> get extraSheetList {
+    return [
+      Editions.EMPIRE,
+      Editions.SEAS,
+      Editions.EMPIRE_SECOND,
+    ];
+  }
+
+  SheetModel sheet(SheetType type) {
     switch (this) {
       case Editions.EMPIRE:
-        return EmpireSheetModel();
+        return EmpireSheetModel(type: type);
       // case Editions.AETERNUM:
       //   return "Fragged Aeternum";
       // case Editions.KINGDOM:
@@ -64,7 +70,7 @@ extension EditionsExt on Editions {
       // case Editions.EMPIRE_SECOND:
       //   return "Fragged Empire 2e";
       default:
-        return EmpireSheetModel();
+        return EmpireSheetModel(type: type);
     }
   }
 
@@ -101,7 +107,7 @@ extension EditionsExt on Editions {
 
 enum SheetType {
   CHARACTER,
-  VEHICLE,
+  EXTRA,
   GOONS, // In-dev
 }
 extension SheetTypesEx on SheetType{
@@ -109,8 +115,8 @@ extension SheetTypesEx on SheetType{
     switch (this) {
       case SheetType.CHARACTER:
         return "Character";
-      case SheetType.VEHICLE:
-        return "Vehicle";
+      case SheetType.EXTRA:
+        return "Extra";
       case SheetType.GOONS:
         return "Goons";
     }
@@ -120,7 +126,7 @@ extension SheetTypesEx on SheetType{
     switch (this) {
       case SheetType.CHARACTER:
         return Icons.person;
-      case SheetType.VEHICLE:
+      case SheetType.EXTRA:
         return Icons.two_wheeler;
       case SheetType.GOONS:
         return SheetIcons.enemy;
@@ -140,17 +146,39 @@ abstract class SheetModel {
   String get toJsonString;
   /// Returns a Map<String, dynamic> representation of the object.
   Map<String, dynamic> get toMap;
+
+  static SheetModel builder({required Editions edition, required SheetType type, required String name}) {
+    switch (edition) {
+      case Editions.EMPIRE:
+        return EmpireSheetModel(
+          type: type,
+          name: name
+        );
+      case Editions.AETERNUM:
+        return AeternumSheetModel(
+          type: type,
+          name: name
+        );
+      default:
+        return EmpireSheetModel(
+          type: type,
+          name: name
+        );
+    }
+  }
+
 }
 
 class EmpireSheetModel extends SheetModel {
   Editions edition = Editions.EMPIRE;
-  SheetType type = SheetType.CHARACTER;
+  SheetType type;
 
   // Basic data
   String name;
 
   EmpireSheetModel({
-    this.name: ""
+    this.name: "",
+    required this.type,
   });
 
   @override
@@ -166,13 +194,14 @@ class EmpireSheetModel extends SheetModel {
 
 class AeternumSheetModel extends SheetModel {
   Editions edition = Editions.AETERNUM;
-  SheetType type = SheetType.CHARACTER;
+  SheetType type;
 
   // Basic data
   String name;
 
   AeternumSheetModel({
-    this.name: ""
+    this.name: "",
+    required this.type,
   });
 
   @override
