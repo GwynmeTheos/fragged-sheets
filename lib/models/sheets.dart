@@ -139,8 +139,9 @@ extension SheetTypesEx on SheetType{
 /// [toMap] as overrides.
 abstract class SheetModel {
   abstract Editions edition;
-  abstract String name;
   abstract SheetType type;
+  abstract String name;
+  abstract String player;
 
   /// Returns a Json string representation of the object.
   String get toJsonString;
@@ -175,9 +176,19 @@ class EmpireSheetModel extends SheetModel {
 
   // Basic data
   String name;
+  String player;
+  String? race;
+  String? languages = "Corp";
+
+  int? level = 0;
+  int? maxResources;
+  int? curResources;
+  int? maxInfluence;
+  int? curInfluence;
 
   EmpireSheetModel({
     this.name: "",
+    this.player: "",
     required this.type,
   });
 
@@ -198,9 +209,11 @@ class AeternumSheetModel extends SheetModel {
 
   // Basic data
   String name;
+  String player;
 
   AeternumSheetModel({
     this.name: "",
+    this.player: "",
     required this.type,
   });
 

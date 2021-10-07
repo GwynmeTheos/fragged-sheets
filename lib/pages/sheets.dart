@@ -3,12 +3,58 @@ import 'package:fragged_sheets/models/models.dart';
 import 'package:fragged_sheets/widgets/widgets.dart';
 
 class EmpireSheetPage {
-  SheetModel sheetModel;
+  EmpireSheetModel sheetModel;
+  late TextEditingController nameController;
+  late TextEditingController playerController;
+  late TextEditingController raceController;
+  late TextEditingController languageController;
+
+  late TextEditingController levelController;
+  late TextEditingController maxResController;
+  late TextEditingController curResController;
+  late TextEditingController maxInfController;
+  late TextEditingController curInfController;
   
-  EmpireSheetPage(this.sheetModel);
+  EmpireSheetPage(this.sheetModel){
+    this.nameController = new TextEditingController(
+      text: this.sheetModel.name
+    );
+    this.playerController = new TextEditingController(
+      text: this.sheetModel.player
+    );
+    this.raceController = new TextEditingController(
+      text: this.sheetModel.race
+    );
+    this.languageController = new TextEditingController(
+      text: this.sheetModel.languages
+    );
 
-  // Controllers
-
+    this.levelController = new TextEditingController(
+      text: this.sheetModel.level == null
+        ? "0"
+        : this.sheetModel.level.toString()
+    );
+    this.maxResController = new TextEditingController(
+      text: this.sheetModel.maxResources == null
+        ? "0"
+        : this.sheetModel.maxResources.toString()
+    );
+    this.curResController = new TextEditingController(
+      text: this.sheetModel.curResources == null
+        ? "0"
+        : this.sheetModel.curResources.toString()
+    );
+    this.maxInfController = new TextEditingController(
+      text: this.sheetModel.maxInfluence == null
+        ? "0"
+        : this.sheetModel.maxInfluence.toString()
+    );
+    this.curInfController = new TextEditingController(
+      text: this.sheetModel.curInfluence == null
+        ? "0"
+        : this.sheetModel.curInfluence.toString()
+    );
+  }
 
   Widget get tabBarView {
     switch (this.sheetModel.type) {
@@ -58,6 +104,513 @@ class EmpireSheetPage {
   Widget get _charAttributeTab {
     return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       MediaQueryData mediaQueryData = MediaQuery.of(context);
+      Widget basicBlock = HorizontalBlock(
+        title: "Basic",
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              child: NamedTextField(
+                text: "Name",
+                nameSize: 75,
+                fieldSize: mediaQueryData.size.width * 0.4,
+                controller: this.nameController,
+                onChanged: () {
+                  this.sheetModel.name = this.nameController.text;
+                }
+              ),
+            ),
+            SizedBox(height: 12,),
+            Container(
+              child: NamedTextField(
+                text: "Player",
+                nameSize: 75,
+                fieldSize: mediaQueryData.size.width * 0.4,
+                controller: this.playerController,
+                onChanged: () {
+                  this.sheetModel.player = this.playerController.text;
+                }
+              ),
+            ),
+            SizedBox(height: 12,),
+            Container(
+              child: NamedTextField(
+                text: "Race",
+                nameSize: 75,
+                fieldSize: mediaQueryData.size.width * 0.4,
+                controller: this.raceController,
+                onChanged: () {
+                  this.sheetModel.race = this.raceController.text;
+                }
+              ),
+            ),
+            SizedBox(height: 12,),
+            Container(
+              child: NamedTextField(
+                text: "Language",
+                nameSize: 75,
+                fieldSize: mediaQueryData.size.width * 0.4,
+                controller: this.languageController,
+                onChanged: () {
+                  this.sheetModel.languages = this.languageController.text;
+                }
+              ),
+            ),
+            SizedBox(height: 24,),
+            Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Tooltip(
+                    message: "+1 per 3 sessions, 1 Trait per Lv",
+                    child: Container(
+                      width: 75,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Level"
+                        ),
+                      )
+                    ),
+                  ),
+                  SizedBox(width: 12,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    child: TextFormField(
+                      controller: this.levelController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(      
+                          borderSide: BorderSide(color: Colors.black),   
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        contentPadding: EdgeInsets.all(5)
+                      ),
+                      onChanged: (String? text) {
+                        setState(() {
+                          this.sheetModel.level = int.parse(this.levelController.text);
+                        });
+                      },
+                      onFieldSubmitted: (String? text) {
+                        setState(() {
+                          this.sheetModel.level = int.parse(this.levelController.text);
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          this.sheetModel.level = int.parse(this.levelController.text);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 15.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("="),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text(
+                        "${this.sheetModel.level ?? 0}"
+                      ),
+                    )
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 12,),
+            Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 75,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Resources"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 12,),
+                  Container(
+                    width: 50,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Max"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 60.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("Lv. + 2 +"),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    child: TextFormField( 
+                      controller: this.maxResController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(      
+                          borderSide: BorderSide(color: Colors.black),   
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        contentPadding: EdgeInsets.all(5)
+                      ),
+                      onChanged: (String? text) {
+                        setState(() {
+                          this.sheetModel.maxResources= int.parse(this.maxResController.text);
+                        });
+                      },
+                      onFieldSubmitted: (String? text) {
+                        setState(() {
+                          this.sheetModel.maxResources = int.parse(this.maxResController.text);
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          this.sheetModel.maxResources = int.parse(this.maxResController.text);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 15.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("="),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text(
+                        "${2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxResources ?? 0)}"
+                      ),
+                    )
+                  ),
+                  Container(
+                    width: 24,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 1,
+                      height: 30,
+                      color: Colors.grey,
+                    )
+                  ),
+                  Container(
+                    width: 50,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Current"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    child: TextFormField( 
+                      controller: this.curResController,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: (this.sheetModel.curResources ?? 0) > 2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxResources ?? 0) 
+                          ? Colors.red
+                          : Colors.black
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(      
+                          borderSide: BorderSide(color: Colors.black),   
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        contentPadding: EdgeInsets.all(5)
+                      ),
+                      onChanged: (String? text) {
+                        setState(() {
+                          this.sheetModel.curResources = int.parse(this.curResController.text);
+                        });
+                      },
+                      onFieldSubmitted: (String? text) {
+                        setState(() {
+                          this.sheetModel.curResources = int.parse(this.curResController.text);
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          this.sheetModel.curResources = int.parse(this.curResController.text);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 15.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("/"),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text(
+                        "${2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxResources ?? 0)}"
+                      ),
+                    )
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 12,),
+            Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 75,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Influence"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 12,),
+                  Container(
+                    width: 50,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Max"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 60.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("Lv. + 2 +"),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    child: TextFormField( 
+                      controller: this.maxInfController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(      
+                          borderSide: BorderSide(color: Colors.black),   
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        contentPadding: EdgeInsets.all(5)
+                      ),
+                      onChanged: (String? text) {
+                        setState(() {
+                          this.sheetModel.maxInfluence= int.parse(this.maxInfController.text);
+                        });
+                      },
+                      onFieldSubmitted: (String? text) {
+                        setState(() {
+                          this.sheetModel.maxInfluence = int.parse(this.maxInfController.text);
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          this.sheetModel.maxInfluence = int.parse(this.maxInfController.text);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 15.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("="),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text(
+                        "${2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxInfluence ?? 0)}"
+                      ),
+                    )
+                  ),
+                  Container(
+                    width: 24,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 1,
+                      height: 30,
+                      color: Colors.grey,
+                    )
+                  ),
+                  Container(
+                    width: 50,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Current"
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    child: TextFormField( 
+                      controller: this.curInfController,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: (this.sheetModel.curInfluence ?? 0) > 2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxInfluence ?? 0) 
+                          ? Colors.red
+                          : Colors.black
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(      
+                          borderSide: BorderSide(color: Colors.black),   
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        contentPadding: EdgeInsets.all(5)
+                      ),
+                      onChanged: (String? text) {
+                        setState(() {
+                          this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                        });
+                      },
+                      onFieldSubmitted: (String? text) {
+                        setState(() {
+                          this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 15.0,
+                    height: 35.0,
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text("/"),
+                    )
+                  ),
+                  SizedBox(width: 6,),
+                  Container(
+                    width: 35.0,
+                    height: 35.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Text(
+                        "${2 + (this.sheetModel.level ?? 0) + (this.sheetModel.maxInfluence ?? 0)}"
+                      ),
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ]
+        ),
+      );
+
       return ListView(
         children: [
           Container(
@@ -68,59 +621,29 @@ class EmpireSheetPage {
               ),
               borderRadius: BorderRadius.circular(16)
             ),
+            child: basicBlock
+          ),
+          SizedBox(
+            height: 24
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.transparent,
+                width: 0
+              ),
+              borderRadius: BorderRadius.circular(16)
+            ),
             child: HorizontalBlock(
-              title: "Text",
-              content: Text(""),
+              title: "Attributes",
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  
+                ]
+              ),
             )
-            
-            // Column(
-            //   children: [
-            //     Container(
-            //       padding: EdgeInsets.only(
-            //         top: 10,
-            //         bottom: 10
-            //       ),
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.only(
-            //           topLeft: Radius.circular(16),
-            //           topRight: Radius.circular(16)
-            //         ),
-            //         color: Colors.black
-            //       ),
-            //       child: Text(
-            //         "Upcoming planned features",
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: Container(
-            //         decoration: BoxDecoration(
-            //           border: Border.all(
-            //             color: Colors.black,
-            //             width: 1
-            //           )
-            //         ),
-            //         child: ListView(),
-            //       )
-            //     ),
-            //     Container(
-            //       padding: EdgeInsets.only(
-            //         top: 5,
-            //         bottom: 5
-            //       ),
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.only(
-            //           bottomLeft: Radius.circular(16),
-            //           bottomRight: Radius.circular(16)
-            //         ),
-            //         color: Colors.black
-            //       ),
-            //     ),
-            //   ],
-            // )
           ),
         ],
       );
@@ -145,7 +668,7 @@ class EmpireSheetPage {
 }
 
 class AeternumSheetPage {
-  SheetModel sheetModel;
+  AeternumSheetModel sheetModel;
 
   AeternumSheetPage(this.sheetModel);
 
@@ -185,109 +708,6 @@ class AeternumSheetPage {
   }
 }
 
-
-/*
-Container(
-  height: mediaQueryData.size.height * 0.6,
-  width: mediaQueryData.size.width * 0.3,
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.transparent,
-      width: 0
-    ),
-    borderRadius: BorderRadius.circular(16)
-  ),
-  child: Column(
-    children: [
-      Container(
-        width: mediaQueryData.size.width * 0.3,
-        padding: EdgeInsets.only(
-          top: 10,
-          bottom: 10
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16)
-          ),
-          color: Colors.black
-        ),
-        child: Text(
-          "Upcoming planned features",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-      Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-              width: 1
-            )
-          ),
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text("Character sheets for all editions"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Extra sheets for all editions (that have them)"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Importing and exporting sheets from clipboard"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Importing and exporting sheets from file"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Not go crazy"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("GM Goon Sheets"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Make sheet groups"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Make sheets and groups draggable"),
-              ),
-              Divider(height: 1,),
-              ListTile(
-                title: Text("Polish looks"),
-              ),
-              Divider(height: 1,),
-            ]
-          ),
-        )
-      ),
-      Container(
-        width: mediaQueryData.size.width * 0.3,
-        padding: EdgeInsets.only(
-          top: 5,
-          bottom: 5
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(16),
-            bottomRight: Radius.circular(16)
-          ),
-          color: Colors.black
-        ),
-      ),
-    ],
-  )
-),
-*/
 
 /*
 // ignore: must_be_immutable

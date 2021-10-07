@@ -888,10 +888,10 @@ class _SheetCanvasState extends State<SheetCanvas>{
     // risk regarding the null safety ignore operators here.
     switch (widget.sheet!.edition) {
       case Editions.EMPIRE:
-        EmpireSheetPage sheetPage = new EmpireSheetPage(widget.sheet!);
+        EmpireSheetPage sheetPage = new EmpireSheetPage(widget.sheet! as EmpireSheetModel);
         return sheetPage.tabBarView;
       case (Editions.AETERNUM):
-        AeternumSheetPage sheetPage = new AeternumSheetPage(widget.sheet!);
+        AeternumSheetPage sheetPage = new AeternumSheetPage(widget.sheet! as AeternumSheetModel);
         return sheetPage.tabBarView;
       // case :
         
