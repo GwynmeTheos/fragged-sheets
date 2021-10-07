@@ -143,27 +143,30 @@ abstract class SheetModel {
   abstract String name;
   abstract String player;
 
-  /// Returns a Json string representation of the object.
-  String get toJsonString;
+  /// Sets the member variables based on a given map.
+  void fromMap(Map<String, dynamic> data);
   /// Returns a Map<String, dynamic> representation of the object.
   Map<String, dynamic> get toMap;
 
-  static SheetModel builder({required Editions edition, required SheetType type, required String name}) {
+  static SheetModel builder({required Editions edition, required SheetType type, required String name, Map<String, dynamic>? data}) {
     switch (edition) {
       case Editions.EMPIRE:
         return EmpireSheetModel(
           type: type,
-          name: name
+          name: name,
+          data: data
         );
       case Editions.AETERNUM:
         return AeternumSheetModel(
           type: type,
-          name: name
+          name: name,
+          data: data
         );
       default:
         return EmpireSheetModel(
           type: type,
-          name: name
+          name: name,
+          data: data
         );
     }
   }
@@ -190,16 +193,41 @@ class EmpireSheetModel extends SheetModel {
     this.name: "",
     this.player: "",
     required this.type,
-  });
+    Map<String, dynamic>? data
+  }){
+    if (data != null) {
+      fromMap(data);
+    }
+  }
 
   @override
-  String get toJsonString {
-    return "";
+  void fromMap(Map<String, dynamic> data) {
+    this.player = data['player'];
+    this.race = data['race'];
+    this.languages = data['languages'];
+    this.level = data['level'];
+    this.maxResources = data['maxResources'];
+    this.curResources = data['curResources'];
+    this.maxInfluence = data['maxInfluence'];
+    this.curInfluence = data['curInfluence'];
   }
 
   @override
   Map<String, dynamic> get toMap {
-    return {};
+    return <String, dynamic>{
+      'edition': this.edition.name,
+      'type': this.type.name,
+
+      'name': this.name,
+      'player': this.player,
+      'race': this.race ?? "",
+      'languages': this.languages ?? "",
+      'level': this.level ?? 0,
+      'maxResources': this.maxResources ?? 0,
+      'curResources': this.curResources ?? 0,
+      'maxInfluence': this.maxInfluence ?? 0,
+      'curInfluence': this.curInfluence ?? 0,
+    };
   }
 }
 
@@ -215,11 +243,16 @@ class AeternumSheetModel extends SheetModel {
     this.name: "",
     this.player: "",
     required this.type,
-  });
+    Map<String, dynamic>? data
+  }){
+    if (data != null) {
+      fromMap(data);
+    }
+  }
 
   @override
-  String get toJsonString {
-    return "";
+  void fromMap(Map<String, dynamic> data) {
+    print("");
   }
 
   @override

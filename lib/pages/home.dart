@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fragged_sheets/pages/sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:file_picker/file_picker.dart';
+
+import 'package:fragged_sheets/pages/sheets.dart';
 import 'package:fragged_sheets/widgets/widgets.dart';
 import 'package:fragged_sheets/models/models.dart';
 import 'package:fragged_sheets/utils/utils.dart';
@@ -8,17 +10,28 @@ import 'package:fragged_sheets/utils/utils.dart';
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
-
   @override
   _HomeState createState() => _HomeState();
 }
 class _HomeState extends State<Home> {
+  List<SheetModel> sheets = List<SheetModel>.empty(growable: true);
   SheetModel? activeSheet;
   int? activeSheetIndex;
+
+  void initSheets() async {
+    this.sheets.add(
+      EmpireSheetModel(name: "Hello", type: SheetType.CHARACTER)
+    );
+    this.sheets.add(
+      AeternumSheetModel(name: "World", type: SheetType.CHARACTER)
+    );
+  }
 
   @override
   void initState(){
     super.initState();
+
+    initSheets();
   }
 
   @override
@@ -36,6 +49,7 @@ class _HomeState extends State<Home> {
             SizedBox(
               width: mediaQueryData.size.width * 0.2,
               child: Sidebar(
+                sheets: this.sheets,
                 activeSheet: this.activeSheet,
                 onStateChanged: () {
                   setState(() {
@@ -65,12 +79,14 @@ class _HomeState extends State<Home> {
 }
 
 class Sidebar extends StatefulWidget {
+  final List<SheetModel> sheets;
   final void Function() onStateChanged;
   final void Function(SheetModel?, int) onActiveSheetChanged;
   final int activeSheetIndex;
   final SheetModel? activeSheet;
 
   Sidebar({
+    required this.sheets,
     required this.onStateChanged,
     required this.onActiveSheetChanged,
     this.activeSheetIndex: -1,
@@ -79,7 +95,6 @@ class Sidebar extends StatefulWidget {
   _SidebarState createState() => _SidebarState();
 }
 class _SidebarState extends State<Sidebar> {
-  late List<SheetModel> sheets;
   late int activeSheetIndex;
 
   Editions? newCharacterEdition = EditionsExt.characterSheetList[0];
@@ -91,20 +106,13 @@ class _SidebarState extends State<Sidebar> {
     super.initState();
 
     this.activeSheetIndex = widget.activeSheetIndex;
-
-    this.sheets = List<SheetModel>.empty(growable: true);
-
-    this.sheets.add(
-      EmpireSheetModel(name: "Hello", type: SheetType.CHARACTER)
-    );
-    this.sheets.add(
-      AeternumSheetModel(name: "World", type: SheetType.CHARACTER)
-    );
   }
 
   @override
   void dispose(){
     super.dispose();
+
+    this.newSheetName.dispose();
   }
 
   Future<SheetModel?> showNewCharacterAlert(BuildContext context) async {
@@ -680,7 +688,7 @@ class _SidebarState extends State<Sidebar> {
             SheetModel? newSheet = await showNewCharacterAlert(context);
             if (newSheet != null) {
               setState(() {
-                this.sheets.add(newSheet);
+                widget.sheets.add(newSheet);
               });
             }
           },
@@ -703,7 +711,7 @@ class _SidebarState extends State<Sidebar> {
             SheetModel? newSheet = await showNewExtraAlert(context);
             if (newSheet != null) {
               setState(() {
-                this.sheets.add(newSheet);
+                widget.sheets.add(newSheet);
               });
             }
           },
@@ -726,7 +734,7 @@ class _SidebarState extends State<Sidebar> {
             SheetModel? newSheet = await showNewGoonAlert(context);
             if (newSheet != null) {
               setState(() {
-                this.sheets.add(newSheet);
+                widget.sheets.add(newSheet);
               });
             }
           },
@@ -747,14 +755,14 @@ class _SidebarState extends State<Sidebar> {
           title: Text("Import sheet"),
           onTap: () async {
             SheetModel? newSheet = await showImportSheetAlert(context);
-            if (newSheet != null) {this.sheets.add(newSheet);}
+            if (newSheet != null) {widget.sheets.add(newSheet);}
           },
         ),
       )
     );
     content.add(ConstWidgets.sectionDivider);
 
-    for (int i = 0; i < this.sheets.length; i++){
+    for (int i = 0; i < widget.sheets.length; i++){
       content.add(
         Material(
           borderRadius: BorderRadius.circular(10),
@@ -763,13 +771,13 @@ class _SidebarState extends State<Sidebar> {
             : Colors.grey.shade50,
           child: ListTile(
             leading: Icon(
-              this.sheets[i].type.icon,
+              widget.sheets[i].type.icon,
               color: Colors.black,
             ),
-            title: Text(this.sheets[i].name),
+            title: Text(widget.sheets[i].name),
             onTap: (){
               setState(() {
-                widget.onActiveSheetChanged(this.sheets[i], this.activeSheetIndex);
+                widget.onActiveSheetChanged(widget.sheets[i], this.activeSheetIndex);
                 this.activeSheetIndex = i;
                 print("Redrawn");
               });
@@ -780,11 +788,11 @@ class _SidebarState extends State<Sidebar> {
       content.add(
         Divider(
           height: 5,
-          color: i == this.sheets.length-1 ? Colors.white : Colors.grey.shade200,
+          color: i == widget.sheets.length-1 ? Colors.white : Colors.grey.shade200,
         ),
       );
     }
-    if (this.sheets.length > 0) {content.add(ConstWidgets.sectionDivider);}
+    if (widget.sheets.length > 0) {content.add(ConstWidgets.sectionDivider);}
     
 
     // Github
@@ -868,6 +876,7 @@ class _SidebarState extends State<Sidebar> {
           ]
         ),
         child: ListView(
+          controller: new ScrollController(),
           children: getSidebarContent(context),
         ),
       )
@@ -993,6 +1002,7 @@ class _SheetCanvasState extends State<SheetCanvas>{
                               )
                             ),
                             child: ListView(
+                            controller: new ScrollController(),
                               children: [
                                 ListTile(
                                   title: Text("Character sheets for all editions"),
@@ -1084,34 +1094,57 @@ class _SheetCanvasState extends State<SheetCanvas>{
               ),
             ),
             actions: [
-              Container(
-                padding: EdgeInsets.only(
-                  right: mediaQueryData.size.width * 0.02
-                ),
-                child: IconButton(
-                  onPressed: (){
-                    print("Boop");
-                  },
-                  icon: Icon(
-                    Icons.download,
-                    color: Colors.white
+              Tooltip(
+                message: "Save sheet to local storage",
+                child: Container(
+                  width: 100,
+                  padding: EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                    right: mediaQueryData.size.width * 0.02
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6)
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        print("Saved \"${widget.sheet!.name}\" to local storage!");
+                        String? outputFile = await FilePicker.platform.saveFile(
+                          dialogTitle: 'Please select an output file:',
+                          fileName: 'output-file.pdf',
+                        );
+                      },
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          color: Colors.black
+                        ),
+                      )
+                    ),
                   )
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(
-                  right: mediaQueryData.size.width * 0.02
-                ),
-                child: IconButton(
-                  onPressed: (){
-                    print("Boop");
-                  },
-                  icon: Icon(
-                    Icons.download,
-                    color: Colors.white
-                  )
+              
+              Tooltip(
+                message: "Export sheet",
+                child: Container(
+                  padding: EdgeInsets.only(
+                    right: mediaQueryData.size.width * 0.02
+                  ),
+                  child: IconButton(
+                    onPressed: (){
+                      print("Boop");
+                    },
+                    icon: Icon(
+                      Icons.download,
+                      color: Colors.white
+                    )
+                  ),
                 ),
               ),
+              
             ],
             bottom: TabBar(
               tabs: [

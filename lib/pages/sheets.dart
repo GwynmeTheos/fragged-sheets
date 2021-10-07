@@ -611,6 +611,17 @@ class EmpireSheetPage {
         ),
       );
 
+      Widget attributesBlock = HorizontalBlock(
+        title: "Attributes",
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+          ],
+        )
+      );
+
       return ListView(
         children: [
           Container(
@@ -634,16 +645,7 @@ class EmpireSheetPage {
               ),
               borderRadius: BorderRadius.circular(16)
             ),
-            child: HorizontalBlock(
-              title: "Attributes",
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  
-                ]
-              ),
-            )
+            child: attributesBlock
           ),
         ],
       );
