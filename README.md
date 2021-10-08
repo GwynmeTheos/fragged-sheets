@@ -10,6 +10,7 @@ All instructions use Windows as the base operating system, however all resources
 - [Go](https://golang.org/dl/)
 - C/C++ Compiler (MingW-64 will do fine on Windows)
 - [Git](https://git-scm.com/)
+- [Hover](https://github.com/go-flutter-desktop/hover)
 
 #### Installation
 
@@ -29,4 +30,5 @@ For webserver `flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0`
 
 #### Other tutorials
 
-- ([How to add a folder to your PATH on Windows](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)))
+- [How to add a folder to your PATH on Windows](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14))
+- 
