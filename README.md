@@ -18,7 +18,7 @@ All instructions use Windows as the base operating system, however all resources
 2) [ Project ] Navigate to any folder you want to keep the project at and run `git clone https://github.com/GwynmeTheos/fragged-sheets.git`. Once it is cloned, navigate into the new fragged-sheets folder.
 3) [ Flutter ] Run `flutter pub get` to get all packages.
 4) [ Hover ] Run `set GO111MODULE=on` followed by `go get -u -a github.com/go-flutter-desktop/hover`. `go get` has been deprecated, so if it ever gives you an error, please contact me on the Discord server.
-5) Run `hover run` to run the project on Desktop.
+5) Run `hover run` or the Device Debug option on VSCode to run the project on Desktop.
 
 #### IDEs
 
