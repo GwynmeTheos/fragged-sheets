@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:file_picker/file_picker.dart';
 
 import 'package:fragged_sheets/pages/sheets.dart';
 import 'package:fragged_sheets/widgets/widgets.dart';
@@ -19,12 +18,7 @@ class _HomeState extends State<Home> {
   int? activeSheetIndex;
 
   void initSheets() async {
-    this.sheets.add(
-      EmpireSheetModel(name: "Hello", type: SheetType.CHARACTER)
-    );
-    this.sheets.add(
-      AeternumSheetModel(name: "World", type: SheetType.CHARACTER)
-    );
+    this.sheets = await StorageHelper.getAllSheets();
   }
 
   @override
@@ -1086,7 +1080,7 @@ class _SheetCanvasState extends State<SheetCanvas>{
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.black,
-            title: Text(
+            title: Text(  
               widget.sheet!.name,
               style: TextStyle(
                 color: Colors.white,
@@ -1110,11 +1104,12 @@ class _SheetCanvasState extends State<SheetCanvas>{
                     ),
                     child: TextButton(
                       onPressed: () async {
-                        print("Saved \"${widget.sheet!.name}\" to local storage!");
-                        String? outputFile = await FilePicker.platform.saveFile(
-                          dialogTitle: 'Please select an output file:',
-                          fileName: 'output-file.pdf',
-                        );
+                        if (!widget.sheet!.saved) {
+                          
+                          setState(() {
+                            widget.sheet!.saved = true;
+                          });
+                        }
                       },
                       child: Text(
                         "Save",
@@ -1126,25 +1121,23 @@ class _SheetCanvasState extends State<SheetCanvas>{
                   )
                 ),
               ),
-              
-              Tooltip(
-                message: "Export sheet",
-                child: Container(
-                  padding: EdgeInsets.only(
-                    right: mediaQueryData.size.width * 0.02
-                  ),
-                  child: IconButton(
-                    onPressed: (){
-                      print("Boop");
-                    },
-                    icon: Icon(
-                      Icons.download,
-                      color: Colors.white
-                    )
-                  ),
-                ),
-              ),
-              
+              // Tooltip(
+              //   message: "Export sheet",
+              //   child: Container(
+              //     padding: EdgeInsets.only(
+              //       right: mediaQueryData.size.width * 0.02
+              //     ),
+              //     child: IconButton(
+              //       onPressed: (){
+              //         print("Boop");
+              //       },
+              //       icon: Icon(
+              //         Icons.download,
+              //         color: Colors.white
+              //       )
+              //     ),
+              //   ),
+              // ),
             ],
             bottom: TabBar(
               tabs: [

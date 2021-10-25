@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:fragged_sheets/widgets/widgets.dart';
 
 /// Enumerates the editions for using on the new sheet
@@ -140,6 +142,8 @@ extension SheetTypesEx on SheetType{
 abstract class SheetModel {
   abstract Editions edition;
   abstract SheetType type;
+  abstract String? path;
+  abstract bool saved;
   abstract String name;
   abstract String player;
 
@@ -147,6 +151,18 @@ abstract class SheetModel {
   void fromMap(Map<String, dynamic> data);
   /// Returns a Map<String, dynamic> representation of the object.
   Map<String, dynamic> get toMap;
+
+  static String pathStrings(List<SheetModel> data) {
+    List<String> jsonMap = List.empty(growable: true);
+
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].path != null) {
+        jsonMap.add(data[i].path!);
+      }
+    }
+
+    return jsonEncode(jsonMap);
+  }
 
   static SheetModel builder({required Editions edition, required SheetType type, required String name, Map<String, dynamic>? data}) {
     switch (edition) {
@@ -176,6 +192,8 @@ abstract class SheetModel {
 class EmpireSheetModel extends SheetModel {
   Editions edition = Editions.EMPIRE;
   SheetType type;
+  String? path;
+  bool saved = false;
 
   // Basic data
   String name;
@@ -234,6 +252,8 @@ class EmpireSheetModel extends SheetModel {
 class AeternumSheetModel extends SheetModel {
   Editions edition = Editions.AETERNUM;
   SheetType type;
+  String? path;
+  bool saved = false;
 
   // Basic data
   String name;

@@ -117,7 +117,10 @@ class EmpireSheetPage {
                 fieldSize: mediaQueryData.size.width * 0.4,
                 controller: this.nameController,
                 onChanged: () {
-                  this.sheetModel.name = this.nameController.text;
+                  setState(() {
+                    this.sheetModel.name = this.nameController.text;
+                    this.sheetModel.saved = false;
+                  });
                 }
               ),
             ),
@@ -129,7 +132,11 @@ class EmpireSheetPage {
                 fieldSize: mediaQueryData.size.width * 0.4,
                 controller: this.playerController,
                 onChanged: () {
-                  this.sheetModel.player = this.playerController.text;
+                  setState(() {
+                    this.sheetModel.player = this.playerController.text;
+                    this.sheetModel.saved = false;
+                    
+                  });
                 }
               ),
             ),
@@ -141,7 +148,11 @@ class EmpireSheetPage {
                 fieldSize: mediaQueryData.size.width * 0.4,
                 controller: this.raceController,
                 onChanged: () {
-                  this.sheetModel.race = this.raceController.text;
+                  setState(() {
+                    this.sheetModel.race = this.raceController.text;
+                    this.sheetModel.saved = false;
+                    
+                  });
                 }
               ),
             ),
@@ -153,7 +164,11 @@ class EmpireSheetPage {
                 fieldSize: mediaQueryData.size.width * 0.4,
                 controller: this.languageController,
                 onChanged: () {
+                  setState(() {
                   this.sheetModel.languages = this.languageController.text;
+                    this.sheetModel.saved = false;
+                    
+                  });
                 }
               ),
             ),
@@ -195,16 +210,19 @@ class EmpireSheetPage {
                       onChanged: (String? text) {
                         setState(() {
                           this.sheetModel.level = int.parse(this.levelController.text);
+                          
                         });
                       },
                       onFieldSubmitted: (String? text) {
                         setState(() {
                           this.sheetModel.level = int.parse(this.levelController.text);
+                          
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           this.sheetModel.level = int.parse(this.levelController.text);
+                          
                         });
                       },
                     ),
@@ -294,16 +312,19 @@ class EmpireSheetPage {
                       onChanged: (String? text) {
                         setState(() {
                           this.sheetModel.maxResources= int.parse(this.maxResController.text);
+                          
                         });
                       },
                       onFieldSubmitted: (String? text) {
                         setState(() {
                           this.sheetModel.maxResources = int.parse(this.maxResController.text);
+                          
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           this.sheetModel.maxResources = int.parse(this.maxResController.text);
+                          
                         });
                       },
                     ),
@@ -379,16 +400,19 @@ class EmpireSheetPage {
                       onChanged: (String? text) {
                         setState(() {
                           this.sheetModel.curResources = int.parse(this.curResController.text);
+                          
                         });
                       },
                       onFieldSubmitted: (String? text) {
                         setState(() {
                           this.sheetModel.curResources = int.parse(this.curResController.text);
+                          
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           this.sheetModel.curResources = int.parse(this.curResController.text);
+                          
                         });
                       },
                     ),
@@ -478,16 +502,19 @@ class EmpireSheetPage {
                       onChanged: (String? text) {
                         setState(() {
                           this.sheetModel.maxInfluence= int.parse(this.maxInfController.text);
+                          
                         });
                       },
                       onFieldSubmitted: (String? text) {
                         setState(() {
                           this.sheetModel.maxInfluence = int.parse(this.maxInfController.text);
+                          
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           this.sheetModel.maxInfluence = int.parse(this.maxInfController.text);
+                          
                         });
                       },
                     ),
@@ -563,16 +590,19 @@ class EmpireSheetPage {
                       onChanged: (String? text) {
                         setState(() {
                           this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                          
                         });
                       },
                       onFieldSubmitted: (String? text) {
                         setState(() {
                           this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                          
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           this.sheetModel.curInfluence = int.parse(this.curInfController.text);
+                          
                         });
                       },
                     ),
@@ -716,7 +746,7 @@ class AeternumSheetPage {
 class XSheet extends StatefulWidget {
   SheetModel sheet;
 
-  XSheet({required this.sheet});
+  XSheet(this.sheet, {required this.onStateChanged});
 
   _XSheetState createState() => _XSheetState();
 }
